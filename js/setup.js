@@ -9,8 +9,10 @@ var similarListElement = userDialog.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var wizards = [];
 
+var fragment = document.createDocumentFragment();
+
 // Функция для получения рандомного элемента массива
-var getRandomElemet = function (arr) {
+var getRandomElement = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
@@ -18,14 +20,15 @@ var getRandomElemet = function (arr) {
 var generateWizardData = function (wizardsNumber) {
   for (var i = 0; i < wizardsNumber; i++) {
     wizards[i] = {
-      name: getRandomElemet(WIZARD_NAMES) + ' ' + getRandomElemet(WIZARD_SURNAMES),
-      coatColor: getRandomElemet(COAT_COLORS),
-      eyesColor: getRandomElemet(EYES_COLORS)
+      name: getRandomElement(WIZARD_NAMES) + ' ' + getRandomElement(WIZARD_SURNAMES),
+      coatColor: getRandomElement(COAT_COLORS),
+      eyesColor: getRandomElement(EYES_COLORS)
     };
   }
 };
 
-var renderWizard = function (arrWizards) {
+// Функция отрисовки одного волшебника
+var renderWizardElement = function (arrWizards) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = arrWizards.name;
   wizardElement.querySelector('.wizard-coat').setAttribute('fill', arrWizards.coatColor);
@@ -34,14 +37,16 @@ var renderWizard = function (arrWizards) {
   return wizardElement;
 };
 
-generateWizardData(4);
+var renderWizards = function () {
+  generateWizardData(4);
+  for (var i = 0; i < wizards.length; i++) {
+    fragment.appendChild(renderWizardElement(wizards[i]));
+  }
+};
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < wizards.length; i++) {
-  fragment.appendChild(renderWizard(wizards[i]));
-}
-
+renderWizards();
 similarListElement.appendChild(fragment);
 
+// удалить в 4 модуле
 userDialog.classList.remove('hidden');
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
